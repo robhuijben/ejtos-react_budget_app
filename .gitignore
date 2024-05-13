@@ -127,3 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+bun.lockb
+node_modules
