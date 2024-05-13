@@ -2,26 +2,44 @@ import React, { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
 
 const Budget = () => {
-  const { budget } = useContext(AppContext);
+  const { budget, dispatch, currency, expenses } = useContext(AppContext);
+
   const [newBudget, setNewBudget] = useState(budget);
   const handleBudgetChange = (e) => {
-    setNewBudget(e.target.value);
+    const totalExpenses = expenses.reduce((total, item) => {
+      return (total = total + item.cost);
+    }, 0);
+
+    if (newBudget > 20000) {
+      alert("The maximum budget is {currency} 20000");
+      return;
+    } else if (newBudget < totalExpenses) {
+      alert("You cannot reduce the budget value lower than the spending");
+      return;
+    } else {
+      dispatch({
+        type: "SET_BUDGET",
+        payload: newBudget,
+      });
+      setNewBudget(e.target.value);
+    }
   };
+
   return (
     <div className="alert alert-secondary">
-      <span>Budget: € </span>
-      <input
-        maxLength="10"
-        style={{ width: "100px" }}
-        type="number"
-        step="10"
-        className="me-2"
-        value={newBudget}
-        onChange={handleBudgetChange}
-      ></input>
-      <button className="btn btn-primary" onClick={() => setNewBudget(budget)}>
-        Set budget
-      </button>
+      <div className="input-group">
+        <div className="input-group-text">Budget: {currency}</div>
+        <input
+          min={0}
+          max={20000}
+          style={{ width: "100px" }}
+          type="number"
+          step="10"
+          className="form-control"
+          value={newBudget}
+          onChange={handleBudgetChange}
+        ></input>
+      </div>
     </div>
   );
 };

@@ -1,16 +1,17 @@
 import React, { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
 const AllocationForm = (props) => {
-  const { dispatch, remaining } = useContext(AppContext);
+  const { dispatch, remaining, currency } = useContext(AppContext);
   const [name, setName] = useState("");
   const [cost, setCost] = useState("");
   const [action, setAction] = useState("");
   const submitEvent = () => {
     if (cost > remaining) {
-      alert("The value cannot exceed remaining funds  €" + remaining);
+      alert("The value cannot exceed remaining funds  {currency}" + remaining);
       setCost("");
       return;
     }
+
     const expense = {
       name: name,
       cost: parseInt(cost),
@@ -27,17 +28,16 @@ const AllocationForm = (props) => {
       });
     }
   };
+
   return (
     <div>
-      <div className="row">
-        <div className="input-group mb-3" style={{ marginLeft: "2rem" }}>
-          <div className="input-group-prepend">
-            <label className="input-group-text" htmlFor="inputGroupSelect01">
-              Department
-            </label>
-          </div>
+      <div className="form d-flex mb-3">
+        <div className="input-group">
+          <label className="input-group-text" htmlFor="inputGroupSelect01">
+            Department
+          </label>
           <select
-            className="custom-select"
+            className="form-select"
             id="inputGroupSelect01"
             onChange={(event) => setName(event.target.value)}
           >
@@ -62,13 +62,13 @@ const AllocationForm = (props) => {
               Admin
             </option>
           </select>
-          <div className="input-group-prepend" style={{ marginLeft: "2rem" }}>
-            <label className="input-group-text" htmlFor="inputGroupSelect02">
-              Allocation
-            </label>
-          </div>
+        </div>
+        <div className="input-group mx-3">
+          <label className="input-group-text" htmlFor="inputGroupSelect02">
+            Allocation
+          </label>
           <select
-            className="custom-select"
+            className="form-select"
             id="inputGroupSelect02"
             onChange={(event) => setAction(event.target.value)}
           >
@@ -79,12 +79,16 @@ const AllocationForm = (props) => {
               Reduce
             </option>
           </select>
+        </div>
+        <div className="input-group">
+          <div className="input-group-text">{currency} </div>
           <input
+            className="form-control"
             required="required"
             type="number"
             id="cost"
             value={cost}
-            style={{ marginLeft: "2rem", size: 10 }}
+            style={{ size: 10 }}
             onChange={(event) => setCost(event.target.value)}
           ></input>
           <button className="btn btn-primary" onClick={submitEvent}>
